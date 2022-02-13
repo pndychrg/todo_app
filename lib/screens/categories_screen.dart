@@ -194,6 +194,53 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         });
   }
 
+  //deleting the categories
+  _deleteDailog(BuildContext context, categoryId) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            actions: <Widget>[
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.black45),
+                ),
+              ),
+              OutlinedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color?>(Colors.red[400])),
+                onPressed: () async {
+                  var result =
+                      await _categoryService.deleteCategory(categoryId);
+                  if (result > 0) {
+                    Navigator.pop(context);
+                    getAllCategories();
+                    _showSuccessSnackBar(Text(
+                      "Deleted The Category",
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
+                      ),
+                    ));
+                  }
+                },
+                child: Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+            title: Text(
+              " Delete This Category ",
+            ),
+          );
+        });
+  }
+
   _showSuccessSnackBar(message) {
     var _snackBar = SnackBar(
       content: message,
@@ -262,7 +309,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       },
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _deleteDailog(
+                          context,
+                          _categoryList[index].id,
+                        );
+                      },
                       icon: Icon(
                         Icons.delete,
                         color: Colors.red,
