@@ -213,8 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     _todoTitleController.clear();
                     _todoDescriptionController.clear();
                     _todoDateController.clear();
-
                     Navigator.pop(context);
+                    getAllTodos();
                   }
                 },
                 child: Text(
