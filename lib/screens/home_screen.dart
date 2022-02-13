@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/constants.dart';
-import 'package:todo_app/helpers/drawer_navigation.dart';
 import 'package:todo_app/modals/todo.dart';
+import 'package:todo_app/screens/categories_screen.dart';
+import 'package:todo_app/screens/todo_by_category.dart';
 import 'package:todo_app/services/category_service.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/services/todo_service.dart';
+import 'package:todo_app/widgets/top_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,10 +43,49 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  //calling todo service
+  TodoService? _todoService;
+  List<Todo> _todoList = <Todo>[];
+
+  getAllTodos() async {
+    _todoService = TodoService();
+    _todoList = <Todo>[];
+
+    var todos = await _todoService?.readTodos();
+    todos.forEach((todo) {
+      setState(() {
+        var model = Todo();
+        model.id = todo['id'];
+        model.title = todo['title'];
+        model.description = todo['description'];
+        model.category = todo['category'];
+        model.todoDate = todo['todoDate'];
+        model.isFinished = todo['isFinished'];
+        _todoList.add(model);
+      });
+    });
+  }
+
+  // getting all categories
+  List _categoryList = [];
+  CategoryService _categoryService = CategoryService();
+  getAllCategories_home() async {
+    var categories = await _categoryService.readCategories();
+    categories.forEach((category) {
+      setState(() {
+        _categoryList.add(category['name']);
+      });
+    });
+  }
+
   @override
   initState() {
+    // getAllCategories_home();
     super.initState();
     _loadCategories();
+    getAllTodos();
+    getAllCategories_home();
   }
 
   //function for loading Categories
@@ -191,18 +232,135 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _globalKey,
       appBar: AppBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+        ),
         backgroundColor: kpurpleColor,
         title: Text(
           "Todo App",
           textAlign: TextAlign.center,
         ),
+        actions: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CategoriesScreen()));
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.list_alt_outlined,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text("Categories",
+                    style: TextStyle(color: Colors.white, fontSize: 15)),
+              ],
+            ),
+          ),
+        ],
       ),
-      drawer: DrawerNavigation(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _addDailogBox(context);
         },
         child: Icon(Icons.add),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 54,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+                child: Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _categoryList.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => TodosByCategory(
+                                      category: _categoryList[index],
+                                    ))),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 5.0,
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            child: Text(
+                              _categoryList[index],
+                              style: GoogleFonts.roboto(
+                                  fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _todoList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      elevation: 5.0,
+                      child: ListTile(
+                        title: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Expanded(
+                              child: Text(
+                                _todoList[index].title ?? 'No Title',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 20,
+                                  letterSpacing: 2,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        ),
+                        subtitle: Opacity(
+                          opacity: 0.5,
+                          child: Text(
+                            _todoList[index].category ?? "No Category",
+                            style: GoogleFonts.roboto(),
+                          ),
+                        ),
+                        trailing: Text(_todoList[index].todoDate),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

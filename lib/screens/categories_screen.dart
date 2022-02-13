@@ -269,7 +269,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             backgroundColor: MaterialStateProperty.all<Color>(kpurpleColor),
             elevation: MaterialStateProperty.all(0.0),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
           child: Icon(Icons.arrow_back_ios),
         ),
         backgroundColor: kpurpleColor,

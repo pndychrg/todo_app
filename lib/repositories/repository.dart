@@ -42,4 +42,11 @@ class Repository {
     return await connection
         .rawDelete("DELETE FROM ${table} WHERE id= ${itemId} ");
   }
+
+  // Read Data table by column name
+  readDataByColumnName(table, columnName, columnValue) async {
+    var connection = await database;
+    return await connection
+        .query(table, where: "${columnName}=?", whereArgs: [columnValue]);
+  }
 }
