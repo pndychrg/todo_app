@@ -31,6 +31,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     getAllCategories();
   }
 
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
   //getting all categories from the Database
   getAllCategories() async {
     _categoryList = <Categories>[];
@@ -143,20 +145,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     backgroundColor:
                         MaterialStateProperty.all<Color?>(kpurpleColor)),
                 onPressed: () async {
-                  if (_categoryNameController.text == '') {
+                  _category.id = category[0]['id'];
+                  _category.name = _editcategoryNameController.text;
+                  _category.description =
+                      _editcategoryDescriptionController.text;
+                  var result = await _categoryService.updateCategory(_category);
+                  if (result > 0) {
                     Navigator.pop(context);
-                  } else {
-                    _category.id = category[0]['id'];
-                    _category.name = _editcategoryNameController.text;
-                    _category.description =
-                        _editcategoryDescriptionController.text;
-                    var result =
-                        await _categoryService.updateCategory(_category);
                     getAllCategories();
-                    if (result > 0) {
-                      print(result);
-                    }
-                    Navigator.pop(context);
+                    _showSuccessSnackBar(Text(
+                      "Updated The Category",
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
+                      ),
+                    ));
                   }
                 },
                 child: Text(
@@ -192,9 +194,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         });
   }
 
+  _showSuccessSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: message,
+      elevation: 2,
+      duration: Duration(seconds: 2),
+      // behavior: SnackBarBehavior.floating,
+      dismissDirection: DismissDirection.horizontal,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(7),
+          topRight: Radius.circular(7),
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: ElevatedButton(
@@ -224,14 +244,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     SizedBox(
                       width: 2,
                     ),
-                    Text(
-                      _categoryList[index].name,
-                      style: GoogleFonts.roboto(
-                        fontSize: 20,
-                        letterSpacing: 2,
+                    Expanded(
+                      child: Text(
+                        _categoryList[index].name,
+                        style: GoogleFonts.roboto(
+                          fontSize: 20,
+                          letterSpacing: 2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Spacer(),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
