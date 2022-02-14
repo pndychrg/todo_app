@@ -336,7 +336,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         onPressed: () {
           _showFormDailog(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

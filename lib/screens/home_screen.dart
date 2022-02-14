@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/constants.dart';
+import 'package:todo_app/helpers/drawer_navigation.dart';
 import 'package:todo_app/modals/todo.dart';
 import 'package:todo_app/screens/categories_screen.dart';
 import 'package:todo_app/screens/task_pop.dart';
@@ -69,25 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // getting all categories
-  List _categoryList = [];
-  CategoryService _categoryService = CategoryService();
-  getAllCategories_home() async {
-    var categories = await _categoryService.readCategories();
-    categories.forEach((category) {
-      setState(() {
-        _categoryList.add(category['name']);
-      });
-    });
-  }
-
   @override
   initState() {
     // getAllCategories_home();
     super.initState();
     _loadCategories();
     getAllTodos();
-    getAllCategories_home();
+    // getAllCategories_home();
   }
 
   //function for loading Categories
@@ -246,77 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
           "Todo App",
           textAlign: TextAlign.center,
         ),
-        actions: <Widget>[
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CategoriesScreen()));
-            },
-            child: Row(
-              children: [
-                Icon(
-                  Icons.list_alt_outlined,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text("Categories",
-                    style: TextStyle(color: Colors.white, fontSize: 15)),
-              ],
-            ),
-          ),
-        ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _addDailogBox(context);
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
+      drawer: DrawerNavigation(),
       body: Container(
         child: Column(
           children: [
-            //top categories List
-            SizedBox(
-              height: 54,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 4.0, top: 4.0),
-                child: Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _categoryList.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () => Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => TodosByCategory(
-                                      category: _categoryList[index],
-                                    ))),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5.0,
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              _categoryList[index],
-                              style: GoogleFonts.roboto(
-                                  fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
             SizedBox(
               height: 10,
             ),
@@ -332,50 +255,69 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       elevation: 5.0,
-                      child: ListTile(
-                        title: Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Expanded(
-                              child: Text(
-                                _todoList[index].title ?? 'No Title',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 20,
-                                  letterSpacing: 2,
-                                  fontWeight: FontWeight.w500,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 2,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                                Expanded(
+                                  child: Text(
+                                    _todoList[index].title ?? 'No Title',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      letterSpacing: 2,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              ],
+                            ),
+                            subtitle: Opacity(
+                              opacity: 0.5,
+                              child: Text(
+                                _todoList[index].category ?? "No Category",
+                                style: GoogleFonts.roboto(),
                               ),
-                            )
-                          ],
-                        ),
-                        subtitle: Opacity(
-                          opacity: 0.5,
-                          child: Text(
-                            _todoList[index].category ?? "No Category",
-                            style: GoogleFonts.roboto(),
+                            ),
+                            trailing: Text(_todoList[index].todoDate),
+                            leading: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.list),
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    TaskPopUp(todo: _todoList[index]),
+                              ),
+                            ),
                           ),
-                        ),
-                        trailing: Text(_todoList[index].todoDate),
-                        leading: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: Icon(Icons.visibility),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                TaskPopUp(todo: _todoList[index]),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.edit),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
             ),
-            //bottom navigation Button
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -385,11 +327,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: kpurpleColor,
               ),
               width: double.infinity,
-              child: OutlinedButton(
+              child: IconButton(
                 onPressed: () {
                   _addDailogBox(context);
                 },
-                child: Icon(
+                icon: Icon(
                   Icons.add,
                   color: Colors.white,
                 ),
