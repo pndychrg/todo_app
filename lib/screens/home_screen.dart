@@ -9,10 +9,10 @@ import 'package:todo_app/services/category_service.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/services/todo_service.dart';
 import 'package:todo_app/widgets/top_navigation_bar.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -232,6 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _globalKey,
       appBar: AppBar(
+        toolbarHeight: 60,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10),
@@ -266,21 +267,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addDailogBox(context);
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _addDailogBox(context);
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
       body: Container(
         child: Column(
           children: [
+            //top categories List
             SizedBox(
               height: 54,
               child: Padding(
                 padding: const EdgeInsets.only(left: 4.0, top: 4.0),
                 child: Expanded(
                   child: ListView.builder(
+                    shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: _categoryList.length,
                     itemBuilder: (context, index) {
@@ -314,6 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
+            //todo list
             Expanded(
               child: ListView.builder(
                 itemCount: _todoList.length,
@@ -357,6 +361,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
+              ),
+            ),
+            //bottom navigation Button
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: kpurpleColor,
+              ),
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {
+                  _addDailogBox(context);
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],
