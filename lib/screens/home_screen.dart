@@ -513,26 +513,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                  color: kpurpleColor,
-                ),
-                width: double.infinity,
-                child: IconButton(
-                  onPressed: () {
-                    _addDailogBox(context);
-                  },
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
             ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 3,
+          backgroundColor: kpurpleColor,
+          onPressed: () {
+            _addDailogBox(context);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
           ),
         ),
       ),

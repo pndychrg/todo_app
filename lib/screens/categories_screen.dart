@@ -258,87 +258,107 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     ScaffoldMessenger.of(context).showSnackBar(_snackBar);
   }
 
+  //background gradient color
+  //creating a function to return gradient color
+  List<Color> _getGradientColor(BuildContext context) {
+    var _grad_color =
+        MediaQuery.of(context).platformBrightness == Brightness.light
+            ? [Colors.purple, Colors.blueAccent]
+            : [Colors.purple, Colors.black12];
+    return _grad_color;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(kpurpleColor),
-            elevation: MaterialStateProperty.all(0.0),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-          child: Icon(Icons.arrow_back_ios),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: _getGradientColor(context),
         ),
-        backgroundColor: kpurpleColor,
-        title: Text("Categories"),
       ),
-      body: ListView.builder(
-        itemCount: _categoryList.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              elevation: 5.0,
-              child: ListTile(
-                title: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 2,
-                    ),
-                    Expanded(
-                      child: Text(
-                        _categoryList[index].name,
-                        style: GoogleFonts.roboto(
-                          fontSize: 20,
-                          letterSpacing: 2,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        key: _globalKey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(kpurpleColor),
+              elevation: MaterialStateProperty.all(0.0),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            },
+            child: Icon(Icons.arrow_back_ios),
+          ),
+          backgroundColor: kpurpleColor,
+          title: Text("Categories"),
+        ),
+        body: ListView.builder(
+          itemCount: _categoryList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                elevation: 5.0,
+                child: ListTile(
+                  title: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Expanded(
+                        child: Text(
+                          _categoryList[index].name,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            letterSpacing: 2,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        _editCategory(context, _categoryList[index].id);
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _deleteDailog(
-                          context,
-                          _categoryList[index].id,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          _editCategory(context, _categoryList[index].id);
+                        },
                       ),
-                    )
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          _deleteDailog(
+                            context,
+                            _categoryList[index].id,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kpurpleColor,
-        onPressed: () {
-          _showFormDailog(context);
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: kpurpleColor,
+          onPressed: () {
+            _showFormDailog(context);
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
       ),
     );

@@ -37,6 +37,9 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                         category: category['name'],
                       ))),
           child: Card(
+            color: MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Colors.white
+                : Colors.black,
             child: ListTile(
               leading: Icon(
                 Icons.arrow_right,
@@ -58,7 +61,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
     var _grad_color =
         MediaQuery.of(context).platformBrightness == Brightness.light
             ? [Colors.white10, Colors.lightBlue]
-            : [Colors.blueGrey.shade900.withOpacity(0.7), Colors.black12];
+            : [Colors.red.shade900.withOpacity(0.7), Colors.black12];
     return _grad_color;
   }
 
@@ -76,6 +79,10 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
         child: ListView(
           children: <Widget>[
             Card(
+              color:
+                  MediaQuery.of(context).platformBrightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black,
               child: Column(
                 children: [
                   ListTile(
