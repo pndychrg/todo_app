@@ -38,13 +38,20 @@ class TaskPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       content: Container(
-        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        height: 300,
+        width: 350,
         child: Card(
-          color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           elevation: 3,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +72,7 @@ class TaskPopUp extends StatelessWidget {
                         fontSize: 40,
                         fontWeight: FontWeight.w300,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -94,12 +101,12 @@ class TaskPopUp extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      todo.description,
+                      todo.description ?? "No Description",
                       style: GoogleFonts.roboto(
-                        fontSize: 40,
+                        fontSize: 20,
                         fontWeight: FontWeight.w300,
                       ),
-                      maxLines: 1,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

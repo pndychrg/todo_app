@@ -25,9 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   var _todoDescriptionController = TextEditingController();
   var _todoDateController = TextEditingController();
 
+  var _todoEditTitleController = TextEditingController();
+  var _todoEditDescriptionController = TextEditingController();
+  var _todoEditDateController = TextEditingController();
+
   var _selectedValue;
   var _categories = <DropdownMenuItem<Object>>[];
 
+  var _todo = Todo();
+  var todo;
   //for date and time
   DateTime _dateTime = DateTime.now();
   _selectedTodoDate(BuildContext context) async {
@@ -124,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: <Widget>[
                   TextField(
+                    maxLines: null,
                     style: GoogleFonts.roboto(),
                     controller: _todoTitleController,
                     decoration: InputDecoration(
@@ -217,7 +224,167 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
-  // getting task by tapping
+
+  //Task Editing Function
+  _editTask(BuildContext context, todoId) async {
+    todo = await _todoService?.readTodosById(todoId);
+    setState(() {
+      _todoEditTitleController.text = todo[0]['title'] ?? "No Title";
+      _todoEditDescriptionController.text =
+          todo[0]['description'] ?? "No Description";
+      _todoEditDateController.text = todo[0]['todoDate'] ?? "No Date";
+      _editTaskDailogBox(context);
+    });
+  }
+
+  // Editing Task DailogBox
+  _editTaskDailogBox(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (param) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            actions: <Widget>[
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.black45),
+                ),
+              ),
+              OutlinedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color?>(kpurpleColor)),
+                onPressed: () async {
+                  _todo.id = todo[0]['id'];
+                  _todo.title = _todoEditTitleController.text;
+                  _todo.description = _todoEditDescriptionController.text;
+                  _todo.todoDate = _todoEditDateController.text;
+                  var result = await _todoService!.updateTodo(_todo);
+                  if (result > 0) {
+                    Navigator.pop(context);
+                    getAllTodos();
+                    _showSuccessSnackBar(Text(
+                      "Updated Task Successfully",
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
+                      ),
+                    ));
+                  }
+                },
+                child: Text(
+                  "Update",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+            title: Text(" Edit Categories "),
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    maxLines: null,
+                    style: GoogleFonts.roboto(),
+                    controller: _todoEditTitleController,
+                    decoration: InputDecoration(
+                      labelText: "Titile",
+                      hintText: "Write Todo Title",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    maxLines: null,
+                    style: GoogleFonts.roboto(),
+                    controller: _todoEditDescriptionController,
+                    decoration: InputDecoration(
+                      labelText: "Description",
+                      hintText: "Write Description",
+                    ),
+                  ),
+                  TextField(
+                    style: GoogleFonts.roboto(),
+                    controller: _todoEditDateController,
+                    decoration: InputDecoration(
+                      labelText: "Date",
+                      hintText: "Pick a Date",
+                      prefixIcon: InkWell(
+                        onTap: () {
+                          _selectedTodoDate(context);
+                        },
+                        child: Icon(Icons.calendar_today),
+                      ),
+                    ),
+                  ),
+                  DropdownButtonFormField(
+                    value: _selectedValue,
+                    items: _categories,
+                    hint: Text("Category"),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedValue = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  // Deleting Task
+  _deleteTaskDailogBox(BuildContext context, todoId) {
+    return showDialog(
+      context: context,
+      builder: (param) {
+        return AlertDialog(
+          title: Text("Delete Task"),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          actions: <Widget>[
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            OutlinedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color?>(Colors.red[400])),
+              onPressed: () async {
+                var result = await _todoService?.deleteTodo(todoId);
+                if (result > 0) {
+                  Navigator.pop(context);
+                  getAllTodos();
+                  _showSuccessSnackBar(Text(
+                    "Deleted Todo Successfully",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                    ),
+                  ));
+                }
+              },
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +424,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       elevation: 5.0,
                       child: Column(
                         children: <Widget>[
+                          SizedBox(
+                            height: 4,
+                          ),
                           ListTile(
                             title: Row(
                               children: <Widget>[
@@ -299,11 +469,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _editTask(context, _todoList[index].id);
+                                },
                                 icon: Icon(Icons.edit),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _deleteTaskDailogBox(
+                                      context, _todoList[index].id);
+                                },
                                 icon: Icon(
                                   Icons.delete,
                                   color: Colors.red,

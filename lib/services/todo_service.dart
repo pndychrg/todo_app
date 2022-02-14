@@ -22,4 +22,19 @@ class TodoService {
     return await _repository.readDataByColumnName(
         'todos', 'category', category);
   }
+
+  //read todos by id
+  readTodosById(todoId) async {
+    return await _repository.readDataById("todos", todoId);
+  }
+
+  //updating Todo
+  updateTodo(Todo todo) async {
+    return await _repository.updateData("todos", todo.todoMap());
+  }
+
+  //deleting todos
+  deleteTodo(todoId) async {
+    return await _repository.deleteData("todos", todoId);
+  }
 }
