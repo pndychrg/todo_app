@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   var _todo = Todo();
   var todo;
+
   //for date and time
   DateTime _dateTime = DateTime.now();
   _selectedTodoDate(BuildContext context) async {
@@ -386,133 +387,153 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  //creating a function to return gradient color
+  List<Color> _getGradientColor(BuildContext context) {
+    var _grad_color =
+        MediaQuery.of(context).platformBrightness == Brightness.light
+            ? [Colors.purple, Colors.blueAccent]
+            : [Colors.purple, Colors.black12];
+    return _grad_color;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        toolbarHeight: 60,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-        ),
-        backgroundColor: kpurpleColor,
-        title: Text(
-          "Todo App",
-          textAlign: TextAlign.center,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: _getGradientColor(context),
         ),
       ),
-      drawer: DrawerNavigation(),
-      body: Container(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            //todo list
-            Expanded(
-              child: ListView.builder(
-                itemCount: _todoList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 5.0,
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 4,
-                          ),
-                          ListTile(
-                            title: Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    _todoList[index].title ?? 'No Title',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 20,
-                                      letterSpacing: 2,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        key: _globalKey,
+        appBar: AppBar(
+          toolbarHeight: 60,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+          ),
+          backgroundColor: kpurpleColor,
+          title: Text(
+            "Todo App",
+            textAlign: TextAlign.center,
+          ),
+        ),
+        drawer: DrawerNavigation(),
+        body: Container(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              //todo list
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _todoList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5.0,
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 4,
+                            ),
+                            ListTile(
+                              title: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 2,
                                   ),
-                                )
+                                  Expanded(
+                                    child: Text(
+                                      _todoList[index].title ?? 'No Title',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 20,
+                                        letterSpacing: 2,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              subtitle: Opacity(
+                                opacity: 0.5,
+                                child: Text(
+                                  _todoList[index].category ?? "No Category",
+                                  style: GoogleFonts.roboto(),
+                                ),
+                              ),
+                              trailing: Text(_todoList[index].todoDate),
+                              leading: IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.list),
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      TaskPopUp(todo: _todoList[index]),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                  onPressed: () {
+                                    _editTask(context, _todoList[index].id);
+                                  },
+                                  icon: Icon(Icons.edit),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    _deleteTaskDailogBox(
+                                        context, _todoList[index].id);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
                               ],
                             ),
-                            subtitle: Opacity(
-                              opacity: 0.5,
-                              child: Text(
-                                _todoList[index].category ?? "No Category",
-                                style: GoogleFonts.roboto(),
-                              ),
-                            ),
-                            trailing: Text(_todoList[index].todoDate),
-                            leading: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.list),
-                              onPressed: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    TaskPopUp(todo: _todoList[index]),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () {
-                                  _editTask(context, _todoList[index].id);
-                                },
-                                icon: Icon(Icons.edit),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  _deleteTaskDailogBox(
-                                      context, _todoList[index].id);
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                color: kpurpleColor,
-              ),
-              width: double.infinity,
-              child: IconButton(
-                onPressed: () {
-                  _addDailogBox(context);
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  color: kpurpleColor,
+                ),
+                width: double.infinity,
+                child: IconButton(
+                  onPressed: () {
+                    _addDailogBox(context);
+                  },
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
