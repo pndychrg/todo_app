@@ -1,15 +1,17 @@
+import 'dart:ui';
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/constants.dart';
 import 'package:todo_app/modals/todo.dart';
 import 'package:todo_app/screens/categories_screen.dart';
+import 'package:todo_app/screens/task_pop.dart';
 import 'package:todo_app/screens/todo_by_category.dart';
 import 'package:todo_app/services/category_service.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/services/todo_service.dart';
 import 'package:todo_app/widgets/top_navigation_bar.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -226,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
+  // getting task by tapping
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +360,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         trailing: Text(_todoList[index].todoDate),
+                        leading: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(Icons.visibility),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                TaskPopUp(todo: _todoList[index]),
+                          ),
+                        ),
                       ),
                     ),
                   );

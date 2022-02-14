@@ -1,8 +1,8 @@
 class Todo {
   int? id;
-  late String? title;
-  late String? description;
-  late String? category;
+  late String title;
+  late String description;
+  late String category;
   late String todoDate;
   int? isFinished;
 
