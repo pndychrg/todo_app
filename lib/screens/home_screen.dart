@@ -424,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: DrawerNavigation(),
         body: Container(
           child: Column(
-            children: [
+            children: <Widget>[
               SizedBox(
                 height: 10,
               ),
@@ -441,7 +441,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Colors.transparent,
                         Colors.purple
                       ],
-                      stops: [0.0, 0.1, 0.9, 1.0],
+                      stops: [0.0, 0.04, 0.9, 1.0],
                     ).createShader(rect);
                   },
                   blendMode: BlendMode.dstOut,
@@ -578,6 +578,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
