@@ -7,7 +7,6 @@ import 'package:todo_app/constants.dart';
 import 'package:todo_app/helpers/drawer_navigation.dart';
 import 'package:todo_app/modals/todo.dart';
 import 'package:todo_app/screens/categories_screen.dart';
-import 'package:todo_app/screens/task_pop.dart';
 import 'package:todo_app/screens/todo_by_category.dart';
 import 'package:todo_app/services/category_service.dart';
 import 'package:intl/intl.dart';

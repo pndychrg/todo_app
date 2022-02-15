@@ -36,10 +36,17 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                   builder: (context) => new TodosByCategory(
                         category: category['name'],
                       ))),
-          child: Card(
-            color: MediaQuery.of(context).platformBrightness == Brightness.light
-                ? Colors.white
-                : Colors.black,
+          child: Container(
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            // color: MediaQuery.of(context).platformBrightness == Brightness.light
+            //     ? Colors.white
+            //     : Colors.black,
             child: ListTile(
               leading: Icon(
                 Icons.arrow_right,
@@ -78,11 +85,33 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
         ),
         child: ListView(
           children: <Widget>[
-            Card(
-              color:
-                  MediaQuery.of(context).platformBrightness == Brightness.light
-                      ? Colors.white
-                      : Colors.black,
+            Container(
+              margin: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: MediaQuery.of(context).platformBrightness ==
+                        Brightness.light
+                    ? Colors.white
+                    : Colors.black,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 1.0, // soften the shadow
+                    spreadRadius: 1.0, //extend the shadow
+                    offset: Offset(
+                      1.0, // Move to right 10  horizontally
+                      1.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+              // color:
+              //     MediaQuery.of(context).platformBrightness == Brightness.light
+              //         ? Colors.white
+              //         : Colors.black,
               child: Column(
                 children: [
                   ListTile(
