@@ -445,45 +445,79 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           children: <Widget>[
                             SizedBox(
-                              height: 4,
+                              height: 10,
                             ),
-                            ListTile(
-                              title: Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 2,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      _todoList[index].title ?? 'No Title',
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 20,
-                                        letterSpacing: 2,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(_todoList[index].todoDate),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  padding: EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5),
                                     ),
-                                  )
-                                ],
-                              ),
-                              subtitle: Opacity(
-                                opacity: 0.5,
-                                child: Text(
-                                  _todoList[index].category ?? "No Category",
-                                  style: GoogleFonts.roboto(),
+                                  ),
+                                  child: Text(
+                                    _todoList[index].category ?? "No Category",
+                                    style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              trailing: Text(_todoList[index].todoDate),
-                              leading: IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(Icons.list),
-                                onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      TaskPopUp(todo: _todoList[index]),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
+                                Expanded(
+                                  child: Text(
+                                    _todoList[index].title ?? 'No Title',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      letterSpacing: 2,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: Opacity(
+                                      opacity: 0.7,
+                                      child: Text(
+                                        _todoList[index].description ??
+                                            "No Description",
+                                        style: GoogleFonts.roboto(),
+                                        maxLines: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
