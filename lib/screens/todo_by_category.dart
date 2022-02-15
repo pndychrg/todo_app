@@ -146,32 +146,6 @@ class _TodosByCategoryState extends State<TodosByCategory> {
                     SizedBox(
                       height: 10,
                     ),
-                    // ListTile(
-                    //   title: Row(
-                    //     children: <Widget>[
-                    //       Expanded(
-                    //         child: Text(
-                    //           _todoList[index].title ?? 'No Title',
-                    //           style: GoogleFonts.roboto(
-                    //             fontSize: 20,
-                    //             letterSpacing: 2,
-                    //             fontWeight: FontWeight.w500,
-                    //           ),
-                    //           maxLines: 2,
-                    //           overflow: TextOverflow.ellipsis,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    //   subtitle: Opacity(
-                    //     opacity: 0.5,
-                    //     child: Text(
-                    //       _todoList[index].description ?? "No Description",
-                    //       style: GoogleFonts.roboto(),
-                    //     ),
-                    //   ),
-                    //   trailing: Text(_todoList[index].todoDate),
-                    // ),
                   ],
                 ),
               ),

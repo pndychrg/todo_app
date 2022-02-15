@@ -430,120 +430,138 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               //todo list
               Expanded(
-                child: ListView.builder(
-                  itemCount: _todoList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding:
-                          EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        elevation: 5.0,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text(_todoList[index].todoDate),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  padding: EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.blueAccent),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5),
-                                    ),
+                child: ShaderMask(
+                  shaderCallback: (Rect rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.purple,
+                        Colors.transparent,
+                        Colors.transparent,
+                        Colors.purple
+                      ],
+                      stops: [0.0, 0.1, 0.9, 1.0],
+                    ).createShader(rect);
+                  },
+                  blendMode: BlendMode.dstOut,
+                  child: ListView.builder(
+                    itemCount: _todoList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding:
+                            EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 5.0,
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(_todoList[index].todoDate),
                                   ),
-                                  child: Text(
-                                    _todoList[index].category ?? "No Category",
-                                    style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.bold,
+                                  Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    padding: EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.blueAccent),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    _todoList[index].title ?? 'No Title',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 20,
-                                      letterSpacing: 2,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    child: Opacity(
-                                      opacity: 0.7,
-                                      child: Text(
-                                        _todoList[index].description ??
-                                            "No Description",
-                                        style: GoogleFonts.roboto(),
-                                        maxLines: 10,
-                                        overflow: TextOverflow.ellipsis,
+                                    child: Text(
+                                      _todoList[index].category ??
+                                          "No Category",
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    _editTask(context, _todoList[index].id);
-                                  },
-                                  icon: Icon(Icons.edit),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _deleteTaskDailogBox(
-                                        context, _todoList[index].id);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Expanded(
+                                    child: Text(
+                                      _todoList[index].title ?? 'No Title',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 20,
+                                        letterSpacing: 2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
+                                      child: Opacity(
+                                        opacity: 0.7,
+                                        child: Text(
+                                          _todoList[index].description ??
+                                              "No Description",
+                                          style: GoogleFonts.roboto(),
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                    onPressed: () {
+                                      _editTask(context, _todoList[index].id);
+                                    },
+                                    icon: Icon(Icons.edit),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      _deleteTaskDailogBox(
+                                          context, _todoList[index].id);
+                                    },
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
