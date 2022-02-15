@@ -24,6 +24,8 @@ class _TodosByCategoryState extends State<TodosByCategory> {
         model.title = todo['title'];
         model.description = todo['decription'];
         model.todoDate = todo['todoDate'];
+        model.category = todo['category'];
+        model.todoDate = todo['todoDate'];
         _todoList.add(model);
       });
     });
