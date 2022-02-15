@@ -35,52 +35,123 @@ class _TodosByCategoryState extends State<TodosByCategory> {
     getTodosByCategories();
   }
 
+  //background gradient color
+  //creating a function to return gradient color
+  List<Color> _getGradientColor(BuildContext context) {
+    var _grad_color =
+        MediaQuery.of(context).platformBrightness == Brightness.light
+            ? [Colors.purple, Colors.blueAccent]
+            : [Colors.purple, Colors.black12];
+    return _grad_color;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kpurpleColor,
-        title: Text(this.widget.category),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: _getGradientColor(context),
+        ),
       ),
-      body: ListView.builder(
-        itemCount: _todoList.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(top: 8, left: 16, right: 16),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 5.0,
-              child: ListTile(
-                title: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _todoList[index].title ?? 'No Title',
-                        style: GoogleFonts.roboto(
-                          fontSize: 20,
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.w500,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: kpurpleColor,
+          title: Text(this.widget.category),
+        ),
+        body: ListView.builder(
+          itemCount: _todoList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5.0,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(_todoList[index].todoDate),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blueAccent),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
+                          child: Text(
+                            _todoList[index].category ?? "No Category",
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            _todoList[index].title ?? 'No Title',
+                            style: GoogleFonts.roboto(
+                              fontSize: 20,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Opacity(
+                              opacity: 0.7,
+                              child: Text(
+                                _todoList[index].description ??
+                                    "No Description",
+                                style: GoogleFonts.roboto(),
+                                maxLines: 10,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
-                subtitle: Opacity(
-                  opacity: 0.5,
-                  child: Text(
-                    _todoList[index].description ?? "No Description",
-                    style: GoogleFonts.roboto(),
-                  ),
-                ),
-                trailing: Text(_todoList[index].todoDate),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
